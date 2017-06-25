@@ -42,24 +42,41 @@ mission.client().config('general:navdata_options', navdata_options);
 mission.client().config('video:video_channel', 1);
 mission.client().config('detect:detect_type', 12);
 
+//for stream reading
+var crypto = require('crypto');
+var fs = require('fs');
+var readStream = fs.createReadStream('input.txt');
+var hash = crypto.createHash('sha1');
+readStream
+  .on('readable', function () {
+    var chunk;
+    while (null !== (chunk = readStream.read())) {
+      hash.update(chunk);
+        //read from chank to 
+        mission.setCurrentLocation({x : 2, y : 1, z : 2, yaw : 0});
+    }
+  })
+  .on('end', function () {
+    console.log(hash.digest('hex'));
+  });
+
 mission.takeoff();
 
 mission.client().config('general:navdata_demo', 'FALSE');
 mission.client().on('navdata', console.log);
 
-console.log("zero dat");
-mission.zero();
-console.log("/zero dat");
+//console.log("zero dat");
+//mission.zero();
+//console.log("/zero dat");
 
-x();
+//x();
 
-function x(){
-    setTimeout(function(){
-        console.log("set dat");
-        mission.setCurrentLocation({x : 2, y : 1, z : 2, yaw : 0});
-        console.log("/set dat");
-    }, 7000);
-}
+//function x(){
+//    setTimeout(function(){
+//        console.log("set dat");
+//        console.log("/set dat");
+//    }, 7000);
+//}
 
 mission.go({x : 2.2, y : 1, z : 2, yaw : 0});
 
